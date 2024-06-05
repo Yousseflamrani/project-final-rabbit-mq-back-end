@@ -1,15 +1,16 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { Transport, MicroserviceOptions } from '@nestjs/microservices';
+import { Transport } from '@nestjs/microservices';
+import { NestExpressApplication } from '@nestjs/platform-express';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
-  const microservice = app.connectMicroservice<MicroserviceOptions>({
+  const microservice = app.connectMicroservice({
     transport: Transport.RMQ,
     options: {
       urls: ['amqp://localhost:5672'],
-      queue: 'chat_queue',
+      queue: 'notification_queue',
       queueOptions: {
         durable: false,
       },
@@ -18,7 +19,5 @@ async function bootstrap() {
 
   await app.startAllMicroservices();
   await app.listen(3000);
-  console.log('Application is listening on port 3000');
 }
-
 bootstrap();

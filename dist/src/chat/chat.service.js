@@ -12,42 +12,28 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ChatService = void 0;
 const common_1 = require("@nestjs/common");
 const microservices_1 = require("@nestjs/microservices");
-const prisma_service_1 = require("../../prisma/prisma.service");
 let ChatService = class ChatService {
-    constructor(prisma) {
-        this.prisma = prisma;
+    constructor() {
         this.client = microservices_1.ClientProxyFactory.create({
             transport: microservices_1.Transport.RMQ,
             options: {
                 urls: ['amqp://localhost:5672'],
-                queue: 'chat_queue',
+                queue: 'notification_queue',
                 queueOptions: {
-                    durable: false,
+                    durable: false
                 },
             },
         });
     }
-    async createMessage(content, userId) {
-        const message = await this.prisma.message.create({
-            data: {
-                content,
-                userId,
-            },
-        });
-        this.client.emit('chat_message', message);
-        return message;
+    sendMessage(message) {
+        return this.client.send({ cmd: 'notify' }, message);
     }
-    async findAllMessages() {
-        return this.prisma.message.findMany({
-            include: {
-                user: true,
-            },
-        });
+    async createMessage(content, userId) {
     }
 };
 exports.ChatService = ChatService;
 exports.ChatService = ChatService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [prisma_service_1.PrismaService])
+    __metadata("design:paramtypes", [])
 ], ChatService);
 //# sourceMappingURL=chat.service.js.map

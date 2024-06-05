@@ -1,9 +1,6 @@
-import { PrismaService } from "../../prisma/prisma.service";
-import { Message } from '@prisma/client';
 export declare class ChatService {
-    private prisma;
     private client;
-    constructor(prisma: PrismaService);
-    createMessage(content: string, userId: number): Promise<Message>;
-    findAllMessages(): Promise<Message[]>;
+    constructor();
+    sendMessage(message: string): import("rxjs").Observable<any>;
+    createMessage(content: string, userId: any): Promise<void>;
 }

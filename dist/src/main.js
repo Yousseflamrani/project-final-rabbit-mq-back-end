@@ -9,7 +9,7 @@ async function bootstrap() {
         transport: microservices_1.Transport.RMQ,
         options: {
             urls: ['amqp://localhost:5672'],
-            queue: 'chat_queue',
+            queue: 'notification_queue',
             queueOptions: {
                 durable: false,
             },
@@ -17,7 +17,6 @@ async function bootstrap() {
     });
     await app.startAllMicroservices();
     await app.listen(3000);
-    console.log('Application is listening on port 3000');
 }
 bootstrap();
 //# sourceMappingURL=main.js.map
